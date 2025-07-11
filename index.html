@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentsBot - Chatbot Customizado para WhatsApp</title>
+
+    <!-- Meta Tags -->
+    <meta name="description" content="Crie um chatbot 100% personalizado para o seu WhatsApp. Capture leads, realize vendas e ofereça suporte 24/7 com o AgentsBot.">
+    <meta name="keywords" content="chatbot, whatsapp, automação, atendimento ao cliente, IA, bot, agentsbot, firebase">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+    <!-- CDN do Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- CDN do Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- CDN da Biblioteca de Animação (AOS) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Estilos Customizados -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @keyframes animated-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient-bg {
+            background-size: 200% 200%;
+            background-image: linear-gradient(45deg, #111827, #1f2937, #3730a3, #111827);
+            animation: animated-gradient 15s ease infinite;
+        }
+        .chat-window {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .chat-window-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        .chat-window-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased overflow-x-hidden">
+
+    <!-- =================================================== -->
+    <!-- =============== HEADER / NAVEGAÇÃO ================ -->
+    <!-- =================================================== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-gray-900/70 backdrop-blur-sm transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#inicio" class="text-2xl font-bold text-white tracking-wider">Agents<span class="text-indigo-400">Bot</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#inicio" class="nav-link text-gray-300 hover:text-indigo-400 transition-all duration-300">Início</a>
+                <a href="#como-funciona" class="nav-link text-gray-300 hover:text-indigo-400 transition-all duration-300">Como Funciona</a>
+                <a href="#preco" class="nav-link text-gray-300 hover:text-indigo-400 transition-all duration-300">Preço</a>
+                <a href="#suporte" class="nav-link text-gray-300 hover:text-indigo-400 transition-all duration-300">Suporte</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- =================================================== -->
+        <!-- ================== SEÇÃO HERO ===================== -->
+        <!-- =================================================== -->
+        <section id="inicio" class="min-h-screen flex items-center justify-center relative animated-gradient-bg">
+            <div class="container mx-auto px-6 text-center z-10">
+                <div data-aos="fade-up">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+                        Automatize seu Atendimento no WhatsApp com um <span class="text-indigo-400">Agente Virtual Feito para Você.</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+                        Soluções de chatbot 100% customizadas para capturar leads, realizar vendas e oferecer suporte, liberando sua equipe para focar no que realmente importa.
+                    </p>
+                    <a href="#preco" id="cta-hero" class="bg-indigo-600 text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-indigo-700 hover:scale-105 transform transition-all duration-300 inline-block">
+                        Quero meu AgentsBot Agora
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================== -->
+        <!-- ============== SEÇÃO COMO FUNCIONA ================ -->
+        <!-- =================================================== -->
+        <section id="como-funciona" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12" data-aos="fade-up">
+                    <h2 class="text-3xl md:text-4xl font-bold">Como Funciona</h2>
+                    <p class="text-gray-400 mt-2">Nosso processo é simples, transparente e focado no seu resultado.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Cards de como funciona -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-500/20 text-indigo-400 mx-auto mb-6"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div>
+                        <h3 class="text-2xl font-bold text-center mb-4">1. Análise</h3>
+                        <p class="text-gray-400 text-center">Entendemos sua Necessidade. Mapeamos seus processos e desenhamos o fluxo de conversa ideal para o seu negócio.</p>
+                    </div>
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-500/20 text-indigo-400 mx-auto mb-6"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg></div>
+                        <h3 class="text-2xl font-bold text-center mb-4">2. Desenvolvimento</h3>
+                        <p class="text-gray-400 text-center">Construímos seu AgentsBot. Desenvolvemos um robô inteligente e personalizado na plataforma oficial do WhatsApp.</p>
+                    </div>
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-lg transform hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-500/20 text-indigo-400 mx-auto mb-6"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+                        <h3 class="text-2xl font-bold text-center mb-4">3. Entrega e Suporte</h3>
+                        <p class="text-gray-400 text-center">Lançamos seu Agente. Entregamos o bot pronto para uso e oferecemos planos de manutenção para futuras atualizações.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================== -->
+        <!-- ================= SEÇÃO DE PREÇOS ================= -->
+        <!-- =================================================== -->
+        <section id="preco" class="py-20 bg-gray-900/50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12" data-aos="fade-up"><h2 class="text-3xl md:text-4xl font-bold">Um Investimento, Infinitas Possibilidades</h2><p class="text-gray-400 mt-2">Preço transparente para uma solução poderosa.</p></div>
+                <div class="max-w-md mx-auto bg-gray-800 rounded-2xl shadow-2xl border border-indigo-500/50 overflow-hidden" data-aos="zoom-in-up">
+                    <div class="p-8">
+                        <h3 class="text-3xl font-bold text-center text-indigo-400">AgentsBot Custom</h3>
+                        <div class="text-center my-6"><span class="text-5xl font-extrabold">R$ 1.200,00</span><p class="text-gray-400 text-sm">investimento inicial</p></div>
+                        <ul class="space-y-4 text-gray-300">
+                            <li class="flex items-center"><svg class="w-6 h-6 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Setup e Configuração</li>
+                            <li class="flex items-center"><svg class="w-6 h-6 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Fluxo de Conversa Personalizado</li>
+                            <li class="flex items-center"><svg class="w-6 h-6 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Integração com WhatsApp</li>
+                            <li class="flex items-center"><svg class="w-6 h-6 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Treinamento de Uso</li>
+                        </ul>
+                    </div>
+                    <div class="p-8 bg-gray-800/50">
+                        <button id="openModalBtn" class="w-full bg-indigo-600 text-white font-bold py-4 px-8 rounded-lg text-lg hover:bg-indigo-700 hover:scale-105 transform transition-all duration-300">Contratar Agora</button>
+                        <p class="text-center text-gray-500 text-xs mt-4">Planos de manutenção e atualizações cobrados à parte, sob consulta.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================== -->
+        <!-- ================ SEÇÃO DE SUPORTE ================= -->
+        <!-- =================================================== -->
+        <section id="suporte" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12" data-aos="fade-up"><h2 class="text-3xl md:text-4xl font-bold">Precisa de Ajuda ou tem uma Dúvida?</h2><p class="text-gray-400 mt-2">Estamos aqui para ajudar. Preencha o formulário abaixo.</p></div>
+                <div class="max-w-2xl mx-auto" data-aos="fade-up">
+                    <form id="supportForm" class="space-y-6">
+                        <div><label for="name" class="block text-sm font-medium text-gray-300 mb-2">Nome Completo</label><input type="text" id="name" name="name" required class="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300" placeholder="Seu nome completo"></div>
+                        <div><label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Telefone com DDD</label><input type="tel" id="phone" name="phone" required class="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300" placeholder="(11) 99999-9999"></div>
+                        <div><label for="message" class="block text-sm font-medium text-gray-300 mb-2">Descreva sua dúvida</label><textarea id="message" name="message" rows="5" required class="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300" placeholder="Como podemos te ajudar?"></textarea></div>
+                        <div class="flex items-center justify-between"><button type="submit" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-all duration-300">Enviar Mensagem via WhatsApp</button></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =================================================== -->
+    <!-- ===================== FOOTER ====================== -->
+    <!-- =================================================== -->
+    <footer class="bg-gray-800/50 py-6"><div class="container mx-auto px-6 text-center text-gray-400"><p>&copy; 2025 AgentsBot. Todos os direitos reservados.</p></div></footer>
+
+    <!-- =================================================== -->
+    <!-- ============ ELEMENTOS INTERATIVOS (JS) ============ -->
+    <!-- =================================================== -->
+
+    <!-- MODAL DE COMPRA -->
+    <div id="purchaseModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden">
+        <div id="modalContent" class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-md mx-auto p-8 transform transition-all duration-300 scale-95 opacity-0">
+            <h3 class="text-2xl font-bold text-center mb-2">Finalizar Contratação</h3><p class="text-center text-gray-400 mb-6">Plano AgentsBot Custom - <span class="font-bold text-white">R$ 1.200,00</span></p>
+            <div class="bg-gray-700/50 p-4 rounded-lg text-center mb-6"><p class="text-sm text-indigo-300">Selecione o método de pagamento para ser redirecionado ao WhatsApp e concluir com um de nossos especialistas.</p></div>
+            <div class="space-y-4">
+                <button data-payment="PIX" class="payment-btn w-full bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-600 transition-all duration-300">PIX</button>
+                <button data-payment="Cartão de Crédito" class="payment-btn w-full bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-600 transition-all duration-300">Cartão de Crédito</button>
+                <button data-payment="Boleto" class="payment-btn w-full bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-600 transition-all duration-300">Boleto</button>
+            </div>
+            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-all duration-300"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        </div>
+    </div>
+
+    <!-- WIDGET DE CHAT REAL-TIME -->
+    <div class="fixed bottom-5 right-5 z-40">
+        <!-- Ícone do Chat com Badge de Notificação -->
+        <button id="chat-toggle" class="relative bg-indigo-600 w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+            <span id="chat-notification-badge" class="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center border-2 border-gray-900 hidden">0</span>
+        </button>
+
+        <!-- Janela do Chat -->
+        <div id="chat-window" class="chat-window chat-window-hidden absolute bottom-20 right-0 w-80 h-96 bg-gray-800 rounded-xl shadow-2xl flex flex-col">
+            <!-- Header do Chat com Controles -->
+            <div class="bg-gray-900 p-3 flex justify-between items-center rounded-t-xl">
+                <div>
+                    <h4 class="font-bold text-white">Fale Conosco</h4>
+                    <p class="text-xs text-green-400">Online</p>
+                </div>
+                <div>
+                    <button id="chat-minimize" class="text-gray-400 hover:text-white p-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
+                    <button id="chat-close" class="text-gray-400 hover:text-white p-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+            </div>
+            <!-- Área de Mensagens -->
+            <div id="chat-messages" class="flex-1 p-4 space-y-4 overflow-y-auto">
+                <!-- Mensagens serão carregadas aqui pelo Firebase -->
+            </div>
+            <!-- Input de Mensagem -->
+            <form id="chat-form" class="p-4 border-t border-gray-700">
+                <input id="chat-input" type="text" placeholder="Digite sua mensagem..." class="w-full bg-gray-700 rounded-full py-2 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </form>
+        </div>
+    </div>
+
+    <!-- =================================================== -->
+    <!-- =================== SCRIPTS ======================= -->
+    <!-- =================================================== -->
+    
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Firebase SDKs (Módulo) -->
+    <script type="module">
+        // Importar funções necessárias do Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, addDoc, collection, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ================================================================
+        // IMPORTANTE: Cole aqui a configuração do seu projeto Firebase
+        // Você pode encontrar isso nas configurações do seu projeto no console do Firebase.
+        // ================================================================
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_AUTH_DOMAIN",
+            projectId: "SEU_PROJECT_ID",
+            storageBucket: "SEU_STORAGE_BUCKET",
+            messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        // Inicializa o Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Inicia a biblioteca de animação ao rolar
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- LÓGICA DE ROLAGEM SUAVE ---
+            document.querySelectorAll('a.nav-link, #cta-hero').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // --- LÓGICA DO MODAL DE COMPRA ---
+            const openModalBtn = document.getElementById('openModalBtn');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const purchaseModal = document.getElementById('purchaseModal');
+            const modalContent = document.getElementById('modalContent');
+
+            const openModal = () => {
+                purchaseModal.classList.remove('hidden');
+                setTimeout(() => modalContent.classList.remove('scale-95', 'opacity-0'), 10);
+            };
+            const closeModal = () => {
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => purchaseModal.classList.add('hidden'), 300);
+            };
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            purchaseModal.addEventListener('click', e => (e.target === purchaseModal) && closeModal());
+            
+            document.querySelectorAll('.payment-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const message = `Olá! Gostaria de contratar o Plano AgentsBot Custom. O meio de pagamento escolhido foi ${button.dataset.payment}.`;
+                    const whatsappURL = `https://wa.me/5511910787059?text=${encodeURIComponent(message)}`;
+                    window.location.href = whatsappURL;
+                });
+            });
+
+            // --- LÓGICA DO FORMULÁRIO DE SUPORTE (ATUALIZADO) ---
+            const supportForm = document.getElementById('supportForm');
+            supportForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('name').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const message = document.getElementById('message').value.trim();
+
+                if (!name || !phone || !message) {
+                    alert('Por favor, preencha todos os campos.');
+                    return;
+                }
+                
+                const whatsappMessage = `Olá, meu nome é ${name} (${phone}). Gostaria de tirar uma dúvida: ${message}`;
+                const whatsappURL = `https://wa.me/5511910787059?text=${encodeURIComponent(whatsappMessage)}`;
+                window.location.href = whatsappURL;
+                supportForm.reset();
+            });
+
+
+            // --- LÓGICA DO CHAT REAL-TIME COM FIREBASE ---
+            const chatToggle = document.getElementById('chat-toggle');
+            const chatWindow = document.getElementById('chat-window');
+            const chatMinimize = document.getElementById('chat-minimize');
+            const chatClose = document.getElementById('chat-close');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+            const notificationBadge = document.getElementById('chat-notification-badge');
+            
+            let currentUserId = null;
+            let chatId = localStorage.getItem('agentsbot_chat_id');
+            let unsubscribe = null; // Para parar de ouvir as mensagens
+            let unreadCount = 0;
+
+            const toggleChatWindow = (forceOpen = null) => {
+                const isVisible = !chatWindow.classList.contains('chat-window-hidden');
+                const open = forceOpen !== null ? forceOpen : !isVisible;
+
+                if (open) {
+                    chatWindow.classList.remove('chat-window-hidden');
+                    chatWindow.classList.add('chat-window-visible');
+                    // Resetar notificações ao abrir
+                    unreadCount = 0;
+                    updateNotificationBadge();
+                } else {
+                    chatWindow.classList.add('chat-window-hidden');
+                    chatWindow.classList.remove('chat-window-visible');
+                }
+            };
+            
+            chatToggle.addEventListener('click', () => toggleChatWindow());
+            chatMinimize.addEventListener('click', () => toggleChatWindow(false));
+            chatClose.addEventListener('click', () => toggleChatWindow(false));
+            
+            // Autenticação anônima
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUserId = user.uid;
+                    if (!chatId) {
+                        // Cria um novo chat se não existir um no localStorage
+                        const chatRef = await addDoc(collection(db, "chats"), {
+                            userId: currentUserId,
+                            createdAt: serverTimestamp(),
+                            lastMessage: "Novo chat iniciado."
+                        });
+                        chatId = chatRef.id;
+                        localStorage.setItem('agentsbot_chat_id', chatId);
+                    }
+                    listenToMessages();
+                } else {
+                    signInAnonymously(auth).catch(error => console.error("Erro na autenticação anônima:", error));
+                }
+            });
+
+            // Ouvir mensagens em tempo real
+            function listenToMessages() {
+                if (unsubscribe) unsubscribe(); // Para o listener anterior
+                
+                const messagesRef = collection(db, "chats", chatId, "messages");
+                const q = query(messagesRef, orderBy("timestamp"));
+
+                unsubscribe = onSnapshot(q, (snapshot) => {
+                    const isChatVisible = !chatWindow.classList.contains('chat-window-hidden');
+                    
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "added") {
+                            const messageData = change.doc.data();
+                            displayMessage(messageData);
+
+                            // Lógica de notificação
+                            if (!isChatVisible && messageData.sender === 'bot') {
+                                unreadCount++;
+                                updateNotificationBadge();
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Exibir mensagem na tela
+            function displayMessage(data) {
+                const messageElement = document.createElement('div');
+                const textElement = document.createElement('p');
+                textElement.innerText = data.text;
+                textElement.classList.add('p-3', 'rounded-lg', 'max-w-xs', 'text-sm', 'break-words');
+
+                if (data.sender === 'user') {
+                    messageElement.classList.add('flex', 'justify-end');
+                    textElement.classList.add('bg-indigo-600', 'text-white');
+                } else {
+                    messageElement.classList.add('flex', 'justify-start');
+                    textElement.classList.add('bg-gray-700', 'text-white');
+                }
+                
+                messageElement.appendChild(textElement);
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Enviar mensagem
+            chatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const messageText = chatInput.value.trim();
+                if (!messageText || !currentUserId || !chatId) return;
+
+                chatInput.value = '';
+                const messagesRef = collection(db, "chats", chatId, "messages");
+                
+                // Adiciona a mensagem do usuário
+                await addDoc(messagesRef, {
+                    text: messageText,
+                    sender: 'user',
+                    timestamp: serverTimestamp()
+                });
+
+                // Simula a resposta do bot após 2 segundos
+                setTimeout(async () => {
+                    const botResponse = "Olá! Recebemos sua mensagem. Um de nossos especialistas responderá em breve.";
+                    await addDoc(messagesRef, {
+                        text: botResponse,
+                        sender: 'bot',
+                        timestamp: serverTimestamp()
+                    });
+                }, 2000);
+            });
+
+            // Atualizar o badge de notificação
+            function updateNotificationBadge() {
+                if (unreadCount > 0) {
+                    notificationBadge.innerText = unreadCount;
+                    notificationBadge.classList.remove('hidden');
+                } else {
+                    notificationBadge.classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
