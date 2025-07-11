@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Atendimento - AgentsBot</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+
+    <!-- CDN do Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- CDN do Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Scrollbar customizada para a lista de chats e mensagens */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Ecrã de Login -->
+    <div id="login-screen" class="flex items-center justify-center min-h-screen">
+        <div class="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-xl shadow-lg">
+            <div>
+                <h1 class="text-3xl font-bold text-center text-white">Painel de Atendimento</h1>
+                <p class="text-center text-indigo-400">AgentsBot</p>
+            </div>
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label for="email" class="text-sm font-medium text-gray-300">Email</label>
+                    <input type="email" id="email" required class="w-full px-4 py-2 mt-2 text-white bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" placeholder="seu-email@exemplo.com">
+                </div>
+                <div>
+                    <label for="password" class="text-sm font-medium text-gray-300">Senha</label>
+                    <input type="password" id="password" required class="w-full px-4 py-2 mt-2 text-white bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" placeholder="********">
+                </div>
+                <button type="submit" class="w-full py-3 font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">Entrar</button>
+                <p id="login-error" class="text-sm text-center text-red-400 h-4"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Painel Principal (inicialmente oculto) -->
+    <div id="admin-panel" class="hidden h-screen flex flex-col">
+        <!-- Header do Painel -->
+        <header class="flex items-center justify-between p-4 bg-gray-800 border-b border-gray-700 flex-shrink-0">
+            <h1 class="text-xl font-bold text-white">Conversas Ativas</h1>
+            <button id="logout-btn" class="px-4 py-2 text-sm font-medium text-indigo-300 bg-indigo-900/50 rounded-lg hover:bg-indigo-900 transition-colors">Sair</button>
+        </header>
+
+        <!-- Corpo do Painel -->
+        <div class="flex flex-grow overflow-hidden">
+            <!-- Coluna da Lista de Chats -->
+            <aside id="chat-list" class="w-1/3 h-full bg-gray-800 border-r border-gray-700 overflow-y-auto custom-scrollbar">
+                <!-- A lista de chats será inserida aqui pelo JavaScript -->
+                <div class="p-4 text-center text-gray-400">A carregar conversas...</div>
+            </aside>
+
+            <!-- Coluna da Conversa Ativa -->
+            <main id="chat-view" class="w-2/3 h-full flex flex-col bg-gray-900">
+                <!-- Ecrã inicial (quando nenhum chat está selecionado) -->
+                <div id="no-chat-selected" class="flex flex-col items-center justify-center h-full text-gray-500">
+                    <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    <p class="text-lg">Selecione uma conversa para começar</p>
+                </div>
+                
+                <!-- Vista da conversa (conteúdo dinâmico) -->
+                <div id="chat-content" class="hidden flex-grow flex flex-col">
+                    <!-- Header da Conversa -->
+                    <div class="p-4 bg-gray-800/50 border-b border-gray-700 flex-shrink-0 flex justify-between items-center">
+                        <h2 id="chat-header" class="font-bold text-white">Chat ID</h2>
+                        <button id="delete-chat-btn" title="Apagar esta conversa" class="text-red-400 hover:text-red-300 p-2 rounded-full hover:bg-red-500/20 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+                    <!-- Área de Mensagens -->
+                    <div id="messages-container" class="flex-grow p-6 space-y-4 overflow-y-auto custom-scrollbar">
+                        <!-- Mensagens serão inseridas aqui -->
+                    </div>
+                    <!-- Formulário de Resposta -->
+                    <form id="reply-form" class="p-4 bg-gray-800/50 border-t border-gray-700 flex items-center space-x-3 flex-shrink-0">
+                        <input id="reply-input" type="text" placeholder="Digite a sua resposta..." autocomplete="off" class="w-full bg-gray-700 rounded-full py-3 px-5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button type="submit" class="bg-indigo-600 text-white rounded-full p-3 hover:bg-indigo-700 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, addDoc, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyBJl-r9VHO8hYQ-NrxOL3fXPOjRZDw51Rs",
+          authDomain: "agentsbot-chat.firebaseapp.com",
+          projectId: "agentsbot-chat",
+          storageBucket: "agentsbot-chat.appspot.com",
+          messagingSenderId: "679544817266",
+          appId: "1:679544817266:web:fc90717909ccaa898d64eb",
+          measurementId: "G-LV3VSS5KCJ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Elementos do DOM
+        const loginScreen = document.getElementById('login-screen');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+        const chatList = document.getElementById('chat-list');
+        const noChatSelected = document.getElementById('no-chat-selected');
+        const chatContent = document.getElementById('chat-content');
+        const chatHeader = document.getElementById('chat-header');
+        const messagesContainer = document.getElementById('messages-container');
+        const replyForm = document.getElementById('reply-form');
+        const replyInput = document.getElementById('reply-input');
+        const deleteChatBtn = document.getElementById('delete-chat-btn');
+
+        let currentChatListener = null;
+        let selectedChatId = null;
+
+        // Lógica de Autenticação
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            loginError.textContent = '';
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("Erro de login:", error.code);
+                loginError.textContent = 'Email ou senha inválidos.';
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginScreen.classList.add('hidden');
+                adminPanel.classList.remove('hidden');
+                loadAllChats();
+            } else {
+                loginScreen.classList.remove('hidden');
+                adminPanel.classList.add('hidden');
+                if (currentChatListener) currentChatListener();
+            }
+        });
+
+        // Carregar a lista de todas as conversas
+        function loadAllChats() {
+            const chatsRef = collection(db, 'chats');
+            // **INÍCIO DA CORREÇÃO**
+            // Removemos a ordenação por 'lastMessageTimestamp' temporariamente para garantir que todos os chats sejam exibidos.
+            // A ordenação por 'createdAt' é mais segura, pois este campo é criado com o chat.
+            const q = query(chatsRef, orderBy('createdAt', 'desc'));
+            // **FIM DA CORREÇÃO**
+
+            onSnapshot(q, (snapshot) => {
+                chatList.innerHTML = '';
+                if (snapshot.empty) {
+                    chatList.innerHTML = '<p class="p-4 text-center text-gray-400">Nenhuma conversa encontrada.</p>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const chatData = doc.data();
+                    const chatDiv = document.createElement('div');
+                    chatDiv.className = `p-4 border-b border-gray-700 cursor-pointer hover:bg-gray-700/50 transition-colors flex justify-between items-center ${doc.id === selectedChatId ? 'bg-indigo-900/50' : ''}`;
+                    chatDiv.dataset.chatId = doc.id;
+                    
+                    const date = chatData.createdAt?.toDate().toLocaleString('pt-BR') || 'Data desconhecida';
+                    
+                    const lastRead = localStorage.getItem(`lastRead_${doc.id}`);
+                    const hasUnread = chatData.lastMessageTimestamp && (!lastRead || chatData.lastMessageTimestamp.toMillis() > lastRead);
+
+                    chatDiv.innerHTML = `
+                        <div>
+                            <p class="font-bold text-white truncate">${doc.id.substring(0,12)}...</p>
+                            <p class="text-sm text-gray-400">${date}</p>
+                        </div>
+                        ${hasUnread ? '<div class="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0 ml-2" title="Nova mensagem"></div>' : ''}
+                    `;
+                    
+                    chatDiv.addEventListener('click', () => {
+                        selectChat(doc.id);
+                    });
+                    chatList.appendChild(chatDiv);
+                });
+            }, (error) => {
+                console.error("Erro ao carregar lista de chats:", error);
+                chatList.innerHTML = `<div class="p-4 text-center text-red-400">
+                    <p class="font-bold">Erro ao carregar conversas.</p>
+                    <p class="text-sm mt-2">Verifique o console (F12) para um link de criação de índice ou erros de permissão.</p>
+                </div>`;
+            });
+        }
+
+        // Selecionar um chat para visualizar
+        function selectChat(chatId) {
+            selectedChatId = chatId;
+            noChatSelected.classList.add('hidden');
+            chatContent.classList.remove('hidden');
+            chatHeader.textContent = `Chat: ${chatId.substring(0, 8)}...`;
+            messagesContainer.innerHTML = '';
+            replyInput.focus();
+
+            localStorage.setItem(`lastRead_${chatId}`, Date.now());
+            const chatDiv = document.querySelector(`[data-chat-id="${chatId}"]`);
+            const notificationDot = chatDiv?.querySelector('.bg-blue-500');
+            if (notificationDot) notificationDot.remove();
+
+            document.querySelectorAll('#chat-list > div').forEach(div => {
+                div.classList.remove('bg-indigo-900/50');
+                if (div.dataset.chatId === chatId) {
+                    div.classList.add('bg-indigo-900/50');
+                }
+            });
+
+            if (currentChatListener) currentChatListener();
+            
+            const messagesRef = collection(db, 'chats', chatId, 'messages');
+            const q = query(messagesRef, orderBy('timestamp'));
+            
+            currentChatListener = onSnapshot(q, (snapshot) => {
+                messagesContainer.innerHTML = '';
+                snapshot.forEach(doc => {
+                    displayMessage(doc.data());
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+
+        // Exibir uma mensagem na tela
+        function displayMessage(data) {
+            const messageWrapper = document.createElement('div');
+            const messageBubble = document.createElement('div');
+            
+            messageBubble.textContent = data.text;
+            messageBubble.className = 'p-3 rounded-lg max-w-md text-white';
+
+            if (data.sender === 'bot' || data.sender === 'atendente') {
+                messageWrapper.className = 'flex justify-start';
+                messageBubble.classList.add('bg-gray-700');
+            } else { // 'user'
+                messageWrapper.className = 'flex justify-end';
+                messageBubble.classList.add('bg-indigo-600');
+            }
+            
+            messageWrapper.appendChild(messageBubble);
+            messagesContainer.appendChild(messageWrapper);
+        }
+
+        // Enviar uma resposta
+        replyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const replyText = replyInput.value.trim();
+            if (!replyText || !selectedChatId) return;
+
+            const tempSelectedChatId = selectedChatId;
+            replyInput.value = '';
+
+            const messagesRef = collection(db, 'chats', tempSelectedChatId, 'messages');
+            const chatDocRef = doc(db, 'chats', tempSelectedChatId);
+            
+            try {
+                await addDoc(messagesRef, {
+                    text: replyText,
+                    sender: 'bot',
+                    timestamp: serverTimestamp()
+                });
+                await updateDoc(chatDocRef, {
+                    lastMessageTimestamp: serverTimestamp()
+                });
+            } catch (error) {
+                console.error("Erro ao enviar resposta:", error);
+                alert("Não foi possível enviar a resposta. Verifique as permissões.");
+            }
+        });
+
+        // Apagar um chat
+        async function deleteSelectedChat() {
+            if (!selectedChatId) return;
+
+            const willDelete = confirm(`Tem a certeza de que quer apagar permanentemente a conversa ${selectedChatId}? Esta ação não pode ser desfeita.`);
+            if (willDelete) {
+                try {
+                    await deleteDoc(doc(db, "chats", selectedChatId));
+                    
+                    chatContent.classList.add('hidden');
+                    noChatSelected.classList.remove('hidden');
+                    selectedChatId = null;
+                    alert("Conversa apagada com sucesso.");
+
+                } catch (error) {
+                    console.error("Erro ao apagar o chat:", error);
+                    alert("Não foi possível apagar a conversa.");
+                }
+            }
+        }
+        deleteChatBtn.addEventListener('click', deleteSelectedChat);
+
+    </script>
+</body>
+</html>
+```
+
+Depois de atualizar o código, por favor, atualize a página do seu painel de atendimento (`admin.html`). As conversas agora devem aparec
