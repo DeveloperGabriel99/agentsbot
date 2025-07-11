@@ -369,7 +369,21 @@
                     }
                     listenToMessages();
                 } else {
-                    signInAnonymously(auth).catch(error => console.error("Erro na autenticação anônima:", error));
+                    signInAnonymously(auth).catch(error => {
+                        console.error("Erro na autenticação anônima:", error);
+                        // **INÍCIO DA CORREÇÃO**
+                        // Verifica se o erro é de configuração não encontrada
+                        if (error.code === 'auth/configuration-not-found') {
+                            displayMessage({
+                                text: "Erro de conexão: A autenticação anônima não está ativada no painel do Firebase. Por favor, ative-a para usar o chat (Guia, Passo 3).",
+                                sender: 'bot'
+                            });
+                            // Desabilita o input do chat
+                            chatInput.disabled = true;
+                            chatInput.placeholder = "Chat desativado.";
+                        }
+                        // **FIM DA CORREÇÃO**
+                    });
                 }
             });
 
