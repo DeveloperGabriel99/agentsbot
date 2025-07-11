@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgentsBot - Agentes de IA Customizados</title>
+    <title>AgentsAI - Agentes de IA Customizados</title>
 
     <!-- Meta Tags -->
     <meta name="description" content="Automatize tarefas e revolucione seu negócio com Agentes de IA personalizados para WhatsApp.">
-    <meta name="keywords" content="chatbot, whatsapp, automação, atendimento ao cliente, IA, bot, agentsbot, firebase, agentes de ia">
+    <meta name="keywords" content="agente de ia, whatsapp, automação, atendimento ao cliente, IA, agentsai, firebase, agentes de ia">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
@@ -60,7 +60,7 @@
     <!-- =================================================== -->
     <header class="fixed top-0 left-0 w-full z-50 bg-gray-900/70 backdrop-blur-sm transition-all duration-300">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#inicio" class="text-2xl font-bold text-white tracking-wider">Agents<span class="text-indigo-400">Bot</span></a>
+            <a href="#inicio" class="text-2xl font-bold text-white tracking-wider">Agents<span class="text-indigo-400">AI</span></a>
             <nav class="hidden md:flex space-x-8">
                 <a href="#inicio" class="nav-link text-gray-300 hover:text-indigo-400 transition-all duration-300">Início</a>
                 <a href="#capacidades" class="nav-link text-gray-300 hover:text-indigo-400 transition-all duration-300">Capacidades</a>
@@ -156,7 +156,7 @@
                 <div class="text-center mb-12" data-aos="fade-up"><h2 class="text-3xl md:text-4xl font-bold">Um Investimento, Infinitas Possibilidades</h2><p class="text-gray-400 mt-2">Preço transparente para uma solução poderosa.</p></div>
                 <div class="max-w-md mx-auto bg-gray-800 rounded-2xl shadow-2xl border border-indigo-500/50 overflow-hidden" data-aos="zoom-in-up">
                     <div class="p-8">
-                        <h3 class="text-3xl font-bold text-center text-indigo-400">AgentsBot Custom</h3>
+                        <h3 class="text-3xl font-bold text-center text-indigo-400">AgentsAI Custom</h3>
                         <div class="text-center my-6"><span class="text-5xl font-extrabold">R$ 1.200,00</span><p class="text-gray-400 text-sm">investimento inicial</p></div>
                         <ul class="space-y-4 text-gray-300">
                             <li class="flex items-center"><svg class="w-6 h-6 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Análise de Processo e Desenho da Solução</li>
@@ -197,7 +197,7 @@
     <!-- =================================================== -->
     <!-- ===================== FOOTER ====================== -->
     <!-- =================================================== -->
-    <footer class="bg-gray-800/50 py-6"><div class="container mx-auto px-6 text-center text-gray-400"><p>&copy; 2025 AgentsBot. Todos os direitos reservados.</p></div></footer>
+    <footer class="bg-gray-800/50 py-6"><div class="container mx-auto px-6 text-center text-gray-400"><p>&copy; 2025 AgentsAI. Todos os direitos reservados.</p></div></footer>
 
     <!-- =================================================== -->
     <!-- ============ ELEMENTOS INTERATIVOS (JS) ============ -->
@@ -206,7 +206,7 @@
     <!-- MODAL DE COMPRA -->
     <div id="purchaseModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden">
         <div id="modalContent" class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-md mx-auto p-8 transform transition-all duration-300 scale-95 opacity-0">
-            <h3 class="text-2xl font-bold text-center mb-2">Finalizar Contratação</h3><p class="text-center text-gray-400 mb-6">Plano AgentsBot Custom - <span class="font-bold text-white">Investimento Inicial: R$ 1.200,00</span></p>
+            <h3 class="text-2xl font-bold text-center mb-2">Finalizar Contratação</h3><p class="text-center text-gray-400 mb-6">Plano AgentsAI Custom - <span class="font-bold text-white">Investimento Inicial: R$ 1.200,00</span></p>
             <div class="bg-gray-700/50 p-4 rounded-lg text-center mb-6"><p class="text-sm text-indigo-300">Selecione o método de pagamento para ser redirecionado ao WhatsApp e concluir com um de nossos especialistas.</p></div>
             <div class="space-y-4">
                 <button data-payment="PIX" class="payment-btn w-full bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-600 transition-all duration-300">PIX</button>
@@ -324,7 +324,7 @@
             document.querySelectorAll('.payment-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     const paymentMethod = button.dataset.payment;
-                    const message = `Olá! Gostaria de contratar o Plano AgentsBot Custom. O meio de pagamento escolhido foi ${paymentMethod}.`;
+                    const message = `Olá! Gostaria de contratar o Plano AgentsAI Custom. O meio de pagamento escolhido foi ${paymentMethod}.`;
                     const whatsappURL = `https://wa.me/5511910787059?text=${encodeURIComponent(message)}`;
                     window.location.href = whatsappURL;
                 });
@@ -366,7 +366,7 @@
             const notificationBadge = document.getElementById('chat-notification-badge');
             
             let currentUserId = null;
-            let chatId = localStorage.getItem('agentsbot_chat_id');
+            let chatId = localStorage.getItem('agentsai_chat_id');
             let unsubscribe = null; // Para parar de ouvir as mensagens
             let unreadCount = 0;
 
@@ -403,7 +403,7 @@
                                 lastMessageTimestamp: serverTimestamp()
                             });
                             chatId = chatRef.id;
-                            localStorage.setItem('agentsbot_chat_id', chatId);
+                            localStorage.setItem('agentsai_chat_id', chatId);
                         } catch (error) {
                             console.error("Erro ao criar novo chat:", error);
                             displayMessage({ sender: 'bot', text: 'Não foi possível iniciar o chat. Verifique as regras do Firestore.' });
