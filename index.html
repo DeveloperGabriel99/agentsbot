@@ -233,16 +233,16 @@
         import { getFirestore, doc, getDoc, setDoc, addDoc, collection, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // ================================================================
-        // IMPORTANTE: Cole aqui a configuração do seu projeto Firebase
-        // Você pode encontrar isso nas configurações do seu projeto no console do Firebase.
+        // SUA CONFIGURAÇÃO DO FIREBASE (JÁ INSERIDA)
         // ================================================================
         const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_AUTH_DOMAIN",
-            projectId: "SEU_PROJECT_ID",
-            storageBucket: "SEU_STORAGE_BUCKET",
-            messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-            appId: "SEU_APP_ID"
+          apiKey: "AIzaSyBJl-r9VHO8hYQ-NrxOL3fXPOjRZDw51Rs",
+          authDomain: "agentsbot-chat.firebaseapp.com",
+          projectId: "agentsbot-chat",
+          storageBucket: "agentsbot-chat.appspot.com",
+          messagingSenderId: "679544817266",
+          appId: "1:679544817266:web:fc90717909ccaa898d64eb",
+          measurementId: "G-LV3VSS5KCJ"
         };
 
         // Inicializa o Firebase
@@ -425,7 +425,7 @@
                 const messagesRef = collection(db, "chats", chatId, "messages");
                 
                 // Adiciona a mensagem do usuário
-                await addDoc(messagesRef, {
+                await addDoc(messages.ref, {
                     text: messageText,
                     sender: 'user',
                     timestamp: serverTimestamp()
